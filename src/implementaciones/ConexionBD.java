@@ -18,7 +18,6 @@ public class ConexionBD implements IConexionBD{
         
         EntityManagerFactory emFactory = Persistence.createEntityManagerFactory("CyberPapeleriaDominioPU");
         EntityManager em = emFactory.createEntityManager();
-        
         return em;
     }
     

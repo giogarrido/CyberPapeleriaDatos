@@ -1,4 +1,3 @@
-
 package implementaciones;
 
 import entidades.Cliente;
@@ -14,8 +13,8 @@ import javax.persistence.criteria.CriteriaQuery;
  *
  * @author Giovanni Garrdo
  */
-public class ClientesDAO implements IClientesDAO{
-    
+public class ClientesDAO implements IClientesDAO {
+
     private final IConexionBD conexion;
 
     public ClientesDAO(IConexionBD conexion) {
@@ -54,7 +53,7 @@ public class ClientesDAO implements IClientesDAO{
             clienteBD.setNombre(cliente.getNombre());
             clienteBD.setRfc(cliente.getRfc());
             clienteBD.setTelefono(cliente.getTelefono());
-            
+
             em.getTransaction().commit();
             return true;
 
@@ -95,13 +94,13 @@ public class ClientesDAO implements IClientesDAO{
         try {
 
             em.getTransaction().begin();
-            
+
             Cliente clienteBD = em.find(Cliente.class, id);
-            
+
             em.getTransaction().commit();
 
             return clienteBD;
-            
+
         } catch (IllegalStateException ex) {
             System.err.println("No se pudo consultar al cliente");
             ex.printStackTrace();
@@ -112,10 +111,8 @@ public class ClientesDAO implements IClientesDAO{
     @Override
     public List<Cliente> consultarTodos() {
         List<Cliente> clientes = null;
-
         try {
-
-            EntityManager em = conexion.crearConexion();
+                   EntityManager em = conexion.crearConexion();
 
             em.getTransaction().begin();
 

@@ -9,5 +9,5 @@ import javax.persistence.EntityManager;
  */
 public interface IConexionBD {
         
-    EntityManager crearConexion() throws IllegalStateException;
+    EntityManager crearConexion();
 }

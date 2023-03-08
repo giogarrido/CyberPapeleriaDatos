@@ -1,4 +1,3 @@
-
 package implementaciones;
 
 import interfaces.IConexionBD;
@@ -10,15 +9,18 @@ import javax.persistence.Persistence;
  *
  * @author Giovanni Garrido
  */
-public class ConexionBD implements IConexionBD{
+public class ConexionBD implements IConexionBD {
 
-    
     @Override
-    public EntityManager crearConexion() throws IllegalStateException {
-        
-        EntityManagerFactory emFactory = Persistence.createEntityManagerFactory("CyberPapeleriaDominioPU");
-        EntityManager em = emFactory.createEntityManager();
-        return em;
+    public EntityManager crearConexion() {
+        try {
+            EntityManagerFactory emFactory = Persistence.createEntityManagerFactory("CyberPapeleriaDominioPU2");
+            EntityManager em = emFactory.createEntityManager();
+            return em;
+        } catch (Exception e) {
+            System.out.println("");
+        }
+        return null;
     }
-    
+
 }

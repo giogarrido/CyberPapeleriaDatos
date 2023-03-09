@@ -11,7 +11,6 @@ import static enumeradores.Estado.ABIERTA;
 import enumeradores.Rol;
 import interfaces.ICajasDAO;
 import interfaces.IClientesDAO;
-import interfaces.IInventariosDAO;
 import interfaces.IUsuariosDAO;
 import interfaces.IVentasDAO;
 import java.util.ArrayList;
@@ -35,7 +34,6 @@ public class Maintest {
         IVentasDAO ventasDAO;// 
         ICajasDAO cajasDAO;
         IUsuariosDAO usuariosDAO;
-        IInventariosDAO inventariosDAO;
         IClientesDAO clientesDAO;
 //        EntityManagerFactory emFactory = Persistence.createEntityManagerFactory("CyberPapeleriaDominioPU");
 //        EntityManager em = emFactory.createEntityManager();
@@ -61,23 +59,22 @@ public class Maintest {
         cajasDAO = new CajasDAO(new ConexionBD());
         ventasDAO = new VentasDAO(new ConexionBD());
         usuariosDAO = new UsuariosDAO(new ConexionBD());
-        inventariosDAO = new InventariosDAO(new ConexionBD());
         clientesDAO = new ClientesDAO(new ConexionBD());
         //Cliente cliente = new Cliente(1);
-        DetalleVenta detalleVenta = new DetalleVenta(1);
+//        DetalleVenta detalleVenta = new DetalleVenta(1);
 
-        //usuariosDAO.agregar(new Usuario("Adrian", "adrian", Rol.VENDEDOR));
+        usuariosDAO.agregar(new Usuario("Adrian", "adrian", Rol.VENDEDOR));
         //System.out.println(usuariosDAO.consultar(1));
         
 //
-        Caja caja = new Caja(Calendar.getInstance(), 0, 0, 0, 0, ABIERTA, usuariosDAO.consultar(1));
+//        Caja caja = new Caja(Calendar.getInstance(), 0, 0, 0, 0, ABIERTA, usuariosDAO.consultar(1));
         
 //        cajasDAO.agregar(caja);
 
 
-        Venta venta = new Venta(1, Calendar.getInstance(), 100, clientesDAO.consultar(1), cajasDAO.consultar(1));
-
-        ventasDAO.agregar(venta);
+//        Venta venta = new Venta(1, Calendar.getInstance(), 100, clientesDAO.consultar(1), cajasDAO.consultar(1));
+//
+//        ventasDAO.agregar(venta);
         
 
     }

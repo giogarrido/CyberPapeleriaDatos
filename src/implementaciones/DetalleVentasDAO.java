@@ -1,11 +1,11 @@
 package implementaciones;
 
 import entidades.DetalleVenta;
-import entidades.Inventario;
+import entidades.Producto;
 import entidades.Venta;
 import interfaces.IConexionBD;
 import interfaces.IDetalleVentasDAO;
-import interfaces.IInventariosDAO;
+import interfaces.IProductosDAO;
 import javax.persistence.EntityManager;
 
 /**
@@ -16,11 +16,11 @@ public class DetalleVentasDAO implements IDetalleVentasDAO {
 
    private final IConexionBD conexion;
     
-    private IInventariosDAO inventariosDAO;
+    private IProductosDAO productosDAO;
     
-    public DetalleVentasDAO(IConexionBD conexion, IInventariosDAO inventariosDAO){
+    public DetalleVentasDAO(IConexionBD conexion, IProductosDAO productosDAO){
         this.conexion = conexion;
-        this.inventariosDAO = inventariosDAO;
+        this.productosDAO = productosDAO;
     }
     
     @Override
@@ -30,9 +30,9 @@ public class DetalleVentasDAO implements IDetalleVentasDAO {
            EntityManager em = this.conexion.crearConexion();
            em.getTransaction().begin();
            
-           Inventario inventarioBD = em.find(Inventario.class, venta.getInventario().getId());
+           Producto productoBD = em.find(Producto.class, venta.getProducto().getId());
            
-           venta.setInventario(inventarioBD);
+           venta.setProducto(productoBD);
            
            Venta ventaBD = em.find(Venta.class, venta.getVenta().getId());
            
@@ -40,7 +40,7 @@ public class DetalleVentasDAO implements IDetalleVentasDAO {
            
            em.persist(venta);
            
-           inventariosDAO.quitarStock(inventarioBD, venta.getCantidad());
+           productosDAO.quitarStock(productoBD, venta.getCantidad());
            
            
            em.getTransaction().commit();

@@ -5,6 +5,8 @@ import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
 
+
+
 /**
  *
  * @author Giovanni Garrido
@@ -12,15 +14,13 @@ import javax.persistence.Persistence;
 public class ConexionBD implements IConexionBD {
 
     @Override
-    public EntityManager crearConexion() {
-        try {
-            EntityManagerFactory emFactory = Persistence.createEntityManagerFactory("CyberPapeleriaDominioPU2");
-            EntityManager em = emFactory.createEntityManager();
-            return em;
-        } catch (Exception e) {
-            System.out.println("");
-        }
-        return null;
+    public EntityManager crearConexion() throws IllegalStateException {
+
+        //EntityManagerFactory emFactory = Persistence.createEntityManagerFactory("PapeleriaPU");
+        EntityManagerFactory emFactory = Persistence.createEntityManagerFactory("PapeleriaPU");
+        EntityManager em = emFactory.createEntityManager();
+        
+        return em;
     }
 
 }

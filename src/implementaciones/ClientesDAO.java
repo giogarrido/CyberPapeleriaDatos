@@ -9,6 +9,11 @@ import javax.persistence.TypedQuery;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 
+
+
+
+
+
 /**
  *
  * @author Giovanni Garrdo
@@ -112,7 +117,7 @@ public class ClientesDAO implements IClientesDAO {
     public List<Cliente> consultarTodos() {
         List<Cliente> clientes = null;
         try {
-                   EntityManager em = conexion.crearConexion();
+            EntityManager em = conexion.crearConexion();
 
             em.getTransaction().begin();
 

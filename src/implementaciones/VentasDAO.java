@@ -1,9 +1,15 @@
 
 package implementaciones;
 
+import entidades.Caja;
+import entidades.Cliente;
 import entidades.Venta;
+import interfaces.ICajasDAO;
+import interfaces.IClientesDAO;
 import interfaces.IConexionBD;
 import interfaces.IVentasDAO;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.List;
 import javax.persistence.EntityManager;
 import javax.persistence.TypedQuery;
@@ -15,104 +21,68 @@ import javax.persistence.criteria.CriteriaQuery;
  * @author Giovanni Garrido
  */
 public class VentasDAO implements IVentasDAO{
+    
     private final IConexionBD conexion;
-
-    public VentasDAO(IConexionBD conexion) {
+     
+    
+    public VentasDAO(IConexionBD conexion){
         this.conexion = conexion;
+
     }
-
+    
     @Override
-    public boolean agregar(Venta venta) {
+    public int agregar(Venta venta){
+        
+        int idVenta = -1;
+        
+       try{
+           EntityManager em = this.conexion.crearConexion();
+           em.getTransaction().begin();
+           
+           Cliente clienteBD = em.find(Cliente.class, venta.getCliente().getId());
+           
+           Caja cajaBD = em.find(Caja.class, venta.getCaja().getId());
+           
+           venta.setCliente(clienteBD);
+           venta.setCaja(cajaBD);
+           
+           em.persist(venta);
+           em.flush();
+           
+           idVenta = venta.getId();
 
-        EntityManager em = conexion.crearConexion();
-
-        try {
-            em.getTransaction().begin();
-            em.persist(venta);
-            em.getTransaction().commit();
-            return true;
-
-        } catch (IllegalStateException ex) {
-            System.err.println("No fue posible agregar la venta");
-            ex.printStackTrace();
-            return false;
-        }
-    }
-
-    @Override
-    public boolean actualizar(Venta venta) {
-
-        EntityManager em = conexion.crearConexion();
-
-        try {
-            em.getTransaction().begin();
-
-            Venta ventaBD = em.find(Venta.class, venta.getId());
-
-            ventaBD.setFecha(venta.getFecha());
-            ventaBD.setNumTicket(venta.getNumTicket());
-            ventaBD.setTotalventa(venta.getTotalventa());
-            ventaBD.setCliente(venta.getCliente());
-
-            em.getTransaction().commit();
-            return true;
-
-        } catch (IllegalStateException ex) {
-            System.err.println("No fue posible agregar la venta");
-            ex.printStackTrace();
-            return false;
-        }
-    }
-
-    @Override
-    public boolean eliminar(int id) {
-
-        EntityManager em = conexion.crearConexion();
-
-        try {
-            em.getTransaction().begin();
-
-            Venta ventaBD = em.find(Venta.class, id);
-
-            em.remove(ventaBD);
-
-            em.getTransaction().commit();
-            return true;
-
-        } catch (IllegalStateException ex) {
-            System.err.println("No fue posible eliminar la venta");
-            ex.printStackTrace();
-            return false;
-        }
+           em.getTransaction().commit();
+           return idVenta;
+       }catch (IllegalStateException ise){
+           System.err.println("No fue posible guardar la venta");
+           ise.printStackTrace();
+           return idVenta;
+       }
     }
 
     @Override
     public Venta consultar(int id) {
-
-        EntityManager em = conexion.crearConexion();
-
+        
         try {
-
-            em.getTransaction().begin();
-
-            Venta ventaBD = em.find(Venta.class, id);
-
-            em.getTransaction().commit();
-
-            return ventaBD;
-
-        } catch (IllegalStateException ex) {
+            EntityManager em = this.conexion.crearConexion();
+                        
+            Venta venta =  em.find(Venta.class, id);
+            
+            return venta;
+        } catch (IllegalStateException ise) {
             System.err.println("No fue posible consultar la venta");
-            ex.printStackTrace();
+            ise.printStackTrace();
             return null;
         }
     }
 
     @Override
-    public List<Venta> consultarTodos() {
+    public List<Venta> consultarTodas() {
         List<Venta> ventas = null;
+
         try {
-                   EntityManager em = conexion.crearConexion();
+
+            EntityManager em = conexion.crearConexion();
 
             em.getTransaction().begin();
 
@@ -124,12 +94,57 @@ public class VentasDAO implements IVentasDAO{
 
             em.getTransaction().commit();
         } catch (IllegalStateException ex) {
-            System.err.println("No fue posible consultar todas las ventas");
+            System.err.println("No se pudieron consultar todas las ventas");
             ex.printStackTrace();
             return null;
         }
 
         return ventas;
+    }
 
+    @Override
+    public List<Venta> buscarEntre(Calendar inicio, Calendar fin) {
+        List<Venta> ventas = null;
+
+        try {
+
+            EntityManager em = conexion.crearConexion();
+            
+            SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+            
+            String fechaInicio = dateFormat.format(inicio.getTimeInMillis());
+            
+            String fechaFin = dateFormat.format(fin.getTimeInMillis());
+            
+            return em.createQuery(String.format("SELECT v FROM Venta v WHERE v.fecha >= '%s' AND v.fecha <= '%s'", fechaInicio , fechaFin)).getResultList();
+
+        } catch (IllegalStateException ex) {
+            System.err.println("No se pudieron consultar las ventas entre las fechas dadas");
+            ex.printStackTrace();
+            return null;
+        }
+    }
+    
+    @Override
+    public List<Venta> buscarEntreCliente(Calendar inicio, Calendar fin, Cliente cliente) {
+        List<Venta> ventas = null;
+
+        try {
+
+            EntityManager em = conexion.crearConexion();
+            
+            SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+            
+            String fechaInicio = dateFormat.format(inicio.getTimeInMillis());
+            
+            String fechaFin = dateFormat.format(fin.getTimeInMillis());
+            
+            return em.createQuery(String.format("SELECT v FROM Venta v WHERE v.fecha >= '%s' AND v.fecha <= '%s' AND v.cliente.id = %d", fechaInicio , fechaFin, cliente.getId())).getResultList();
+
+        } catch (IllegalStateException ex) {
+            System.err.println("No se pudieron consultar las ventas del cliente en la fecha dada");
+            ex.printStackTrace();
+            return null;
+        }
     }
 }

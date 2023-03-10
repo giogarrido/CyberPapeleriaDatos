@@ -1,4 +1,4 @@
-
+ 
 package implementaciones;
 
 import entidades.Producto;
@@ -97,6 +97,23 @@ public class ProductosDAO implements IProductosDAO{
         
         }catch (IllegalStateException ise){
             System.err.println("No fue posible eliminar el producto");
+            ise.printStackTrace();
+            return false;
+        }
+    }
+    
+    @Override
+    public boolean agregarStock(Producto producto, int stock) {
+        try{
+        EntityManager em = this.conexion.crearConexion();
+        Producto productoBD = em.find(Producto.class, producto.getId());
+        em.getTransaction().begin();
+        productoBD.setStock(productoBD.getStock() + stock);
+        em.getTransaction().commit();
+        return true;
+        
+        }catch (IllegalStateException ise){
+            System.err.println("No fue posible agregar el producto");
             ise.printStackTrace();
             return false;
         }

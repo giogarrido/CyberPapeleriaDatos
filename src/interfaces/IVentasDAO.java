@@ -1,6 +1,8 @@
 package interfaces;
 
+import entidades.Cliente;
 import entidades.Venta;
+import java.util.Calendar;
 import java.util.List;
 
 /**
@@ -9,13 +11,13 @@ import java.util.List;
  */
 public interface IVentasDAO {
 
-    boolean agregar(Venta venta);
-
-    boolean actualizar(Venta venta);
-
-    boolean eliminar(int id);
-
+    int agregar(Venta venta);
+    
     Venta consultar(int id);
-
-    List<Venta> consultarTodos();
+    
+    List<Venta> consultarTodas();
+    
+    List<Venta> buscarEntre(Calendar inicio , Calendar fin);   
+    
+    List<Venta> buscarEntreCliente(Calendar inicio, Calendar fin, Cliente cliente);
 }

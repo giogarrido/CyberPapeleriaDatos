@@ -63,7 +63,7 @@ public class Maintest {
         //Cliente cliente = new Cliente(1);
 //        DetalleVenta detalleVenta = new DetalleVenta(1);
 
-        usuariosDAO.agregar(new Usuario("Adrian", "adrian", Rol.VENDEDOR));
+        //usuariosDAO.agregar(new Usuario("Adrian", "adrian", Rol.VENDEDOR));
         //System.out.println(usuariosDAO.consultar(1));
         
 //

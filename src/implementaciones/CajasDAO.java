@@ -1,6 +1,7 @@
 package implementaciones;
 
 import entidades.Caja;
+import entidades.Usuario;
 import interfaces.IConexionBD;
 import java.util.List;
 import javax.persistence.EntityManager;
@@ -8,6 +9,7 @@ import javax.persistence.TypedQuery;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import interfaces.ICajasDAO;
+import interfaces.IUsuariosDAO;
 
 /**
  *
@@ -16,18 +18,28 @@ import interfaces.ICajasDAO;
 public class CajasDAO implements ICajasDAO {
 
     private final IConexionBD conexion;
+    private final IUsuariosDAO usuariosDAO;
 
     public CajasDAO(IConexionBD conexion) {
         this.conexion = conexion;
+        usuariosDAO = new UsuariosDAO(conexion);
     }
 
     @Override
     public boolean agregar(Caja caja) {
-        EntityManager em = conexion.crearConexion();
+
+        int idCaja = -1;
 
         try {
+            EntityManager em = conexion.crearConexion();
             em.getTransaction().begin();
+            
+            Usuario usuarioBD = em.find(Usuario.class, caja.getUsuario().getId());
+            
+            caja.setUsuario(usuarioBD);
             em.persist(caja);
+            em.flush();
+            
             em.getTransaction().commit();
             return true;
 

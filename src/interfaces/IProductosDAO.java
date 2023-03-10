@@ -21,6 +21,8 @@ public interface IProductosDAO {
     
     boolean quitarStock(Producto producto , int stock);
     
+    boolean agregarStock(Producto producto , int stock);
+    
     Producto consultar(int id);
     
     List<Producto> consultarPorNombre(String nombre);
